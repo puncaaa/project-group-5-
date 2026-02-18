@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Status colors (same for both modes) -->
+    <color name="status_good">#4CAF50</color>
+    <color name="status_warning">#FFC107</color>
+    <color name="status_danger">#F44336</color>
+    <color name="status_info">#999999</color>
+</resources>
