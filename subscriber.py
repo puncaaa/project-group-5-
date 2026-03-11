@@ -2,7 +2,7 @@ import paho.mqtt.client as mqtt
 
 broker = "broker.hivemq.com"
 port = 1883
-topic = "school/temperature"
+topic = "smarthome/security/sensors/#"
 
 def on_message(client, userdata, msg):
     print("Received:", msg.payload.decode())
