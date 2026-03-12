@@ -71,7 +71,7 @@ def main():
 
     client = mqtt_client.Client(
         client_id=CLIENT_ID,
-        callback_api_version=mqtt_client.CallbackAPIVersion.VERSION1
+        callback_api_version=mqtt_client.CallbackAPIVersion.VERSION2
     )
 
     client.on_connect = on_connect
@@ -85,3 +85,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
