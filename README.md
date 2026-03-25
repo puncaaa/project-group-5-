@@ -89,6 +89,18 @@ A configurable timeout (CHART_TIMEOUT_SEC, default 15 seconds) is applied when a
 ## System Summary
 Environmental data is collected by sensors connected to the Arduino Uno. The data is published via MQTT and received by a Python-based subscriber. Sensor readings are processed and stored in an SQLite database with timestamps. The Tkinter dashboard provides a live view of sensor statuses and historical chart analysis, communicating with dedicated backend services through encrypted MQTT messages.
 
+```mermaid
+sequenceDiagram
+Arduino->>MQTT Broker: Publish sensor data (encrypted)
+MQTT Broker->>Python Subscriber: Forward message
+Python Subscriber->>SQLite DB: Store data
+Dashboard->>MQTT Broker: Request chart data
+MQTT Broker->>Chart Service: Forward request
+Chart Service->>SQLite DB: Fetch data
+Chart Service->>MQTT Broker: Send processed data
+MQTT Broker->>Dashboard: Deliver chart data
+```
+
 The project demonstrates how IoT technologies, lightweight messaging protocols, encryption, and database systems can be integrated to build a functional home security monitoring prototype.
 
 ## Authors
