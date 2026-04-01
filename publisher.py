@@ -83,11 +83,11 @@ def main():
             mqtt.publish(f"{BASE_TOPIC}/water", encrypt(data["water"]))
             mqtt.publish(f"{BASE_TOPIC}/light", encrypt(data["light"]))
 
-            print("📤 Published (encrypted) to MQTT:")
-            print(f"   🔥 Flame  → {data['flame']}  (sent as ciphertext)")
-            print(f"   💨 Gas    → {data['gas']}  (sent as ciphertext)")
-            print(f"   💧 Water  → {data['water']}  (sent as ciphertext)")
-            print(f"   💡 Light  → {data['light']}  (sent as ciphertext)\n")
+            print("Published (encrypted) to MQTT:")
+            print(f"Flame  → {data['flame']}  (sent as ciphertext)")
+            print(f"Gas    → {data['gas']}  (sent as ciphertext)")
+            print(f"Water  → {data['water']}  (sent as ciphertext)")
+            print(f"Light  → {data['light']}  (sent as ciphertext)\n")
 
         except json.JSONDecodeError:
             print("Invalid sensor data format")
