@@ -1,15 +1,41 @@
 import sqlite3
+import ssl
+import base64
 from datetime import datetime
 from paho.mqtt import client as mqtt_client
+from Crypto.Cipher import AES
 
 # ========== MQTT SETTINGS ==========
 BROKER = "broker.hivemq.com"
-PORT = 1883                             # Standard port
+PORT = 8883                             # Standard port
 BASE_TOPIC = "smarthome/security/sensors/#"
 CLIENT_ID = "security-subscriber-storage"
 
+# ========== ENCRYPTION SETTINGS ==========
+# ⚠️ IMPORTANT: Must be IDENTICAL to the key in MQTT_Sender_Home.py
+AES_KEY = bytes.fromhex("dd75fc2d686e27a660a25fb5dfa94910e0e9bb4a40f3fe8e89178f93b5de2222")
+
 # ========== DATABASE ==========
 DB_NAME = "smarthome_security.db"
+
+
+# ========== DECRYPTION ==========
+def decrypt(payload: str) -> int:
+    """
+    Decrypts a Base64-encoded AES-256-GCM payload back to an integer.
+    Raises ValueError if the message has been tampered with (tag mismatch).
+    Format expected: Base64(nonce[16] + ciphertext + tag[16])
+    """
+    raw = base64.b64decode(payload)
+
+    nonce      = raw[:16]
+    tag        = raw[-16:]
+    ciphertext = raw[16:-16]
+
+    cipher = AES.new(AES_KEY, AES.MODE_GCM, nonce=nonce)
+    plaintext = cipher.decrypt_and_verify(ciphertext, tag)  # raises ValueError if tampered
+
+    return int(plaintext.decode("utf-8"))
 
 
 # ========== DATABASE ==========
@@ -75,14 +101,17 @@ def on_message(client, userdata, msg):
     sensor = msg.topic.split("/")[-1]
     raw_payload = msg.payload.decode("utf-8")
 
+    print(f"{sensor} → (encrypted payload received)")
+
     try:
-        value = int(raw_payload)
-        print(f"{sensor} → {value}")
+        value = decrypt(raw_payload)
+        print(f"Decrypted value: {value}")
         save_to_db(sensor, value)
         print("Saved to database\n")
 
     except ValueError as e:
-        print(f"Invalid value for {sensor}: {e}\n")
+        # GCM tag mismatch — message was tampered with or key is wrong
+        print(f"Decryption/integrity check failed for {sensor}: {e}\n")
     except Exception as e:
         print(f"Unexpected error processing {sensor}: {e}\n")
 
@@ -95,6 +124,9 @@ def main():
         client_id=CLIENT_ID,
         callback_api_version=mqtt_client.CallbackAPIVersion.VERSION1
     )
+
+    # Enable TLS
+    client.tls_set(cert_reqs=ssl.CERT_REQUIRED, tls_version=ssl.PROTOCOL_TLS)
 
     client.on_connect = on_connect
     client.on_message = on_message
