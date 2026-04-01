@@ -1,20 +1,44 @@
 import sqlite3
+import ssl
 import json
+import base64
+import os
 from datetime import datetime, timedelta
 from paho.mqtt import client as mqtt_client
+from Crypto.Cipher import AES
 
 # ========== MQTT SETTINGS ==========
 BROKER    = "broker.hivemq.com"
-PORT      = 1883
+PORT      = 8883
 CLIENT_ID = "security-chart-service"
 
 REQUEST_TOPIC  = "smarthome/security/charts/request"
 RESPONSE_TOPIC = "smarthome/security/charts/response"
 
+# ========== ENCRYPTION ==========
+AES_KEY = bytes.fromhex("dd75fc2d686e27a660a25fb5dfa94910e0e9bb4a40f3fe8e89178f93b5de2222")
+
 # ========== DATABASE ==========
 DB_NAME = "smarthome_security.db"
 
 VALID_SENSORS = {"flame", "gas", "water", "light"}
+
+
+# ========== ENCRYPTION FUNCTION ==========
+
+def encrypt_json(data: dict) -> str:
+    """
+    Encrypt JSON data using AES-256-GCM.
+    Returns Base64-encoded encrypted payload.
+    """
+    nonce = os.urandom(16)
+    cipher = AES.new(AES_KEY, AES.MODE_GCM, nonce=nonce)
+    plaintext = json.dumps(data, ensure_ascii=False).encode("utf-8")
+    ciphertext, tag = cipher.encrypt_and_digest(plaintext)
+    
+    # Pack: nonce + ciphertext + tag
+    payload = base64.b64encode(nonce + ciphertext + tag).decode("utf-8")
+    return payload
 
 
 # ========== DB QUERIES ==========
@@ -199,11 +223,16 @@ def on_message(client, userdata, msg):
 
         result = get_chart_data(sensor, range_v)
 
+        # Encrypt the response
+        encrypted_payload = encrypt_json(result)
+
         client.publish(RESPONSE_TOPIC, json.dumps(result))
         print(f"Sent response ({len(result.get('points', []))} points) to {RESPONSE_TOPIC}\n")
 
     except (json.JSONDecodeError, ValueError) as e:
-        error_payload = json.dumps({"error": str(e)})
+        # Return encrypted error response
+        error_data = {"error": str(e)}
+        error_payload = encrypt_json(error_data)
         client.publish(RESPONSE_TOPIC, error_payload)
         print(f"Bad request: {e}\n")
 
@@ -218,10 +247,11 @@ def main():
         client_id=CLIENT_ID,
         callback_api_version=mqtt_client.CallbackAPIVersion.VERSION1
     )
+    client.tls_set(tls_version=ssl.PROTOCOL_TLS)
     client.on_connect = on_connect
     client.on_message = on_message
 
-    print("Starting chart service...")
+    print("Starting encrypted chart service (AES-256-GCM)...")
     client.connect(BROKER, PORT)
     client.loop_forever()
 
