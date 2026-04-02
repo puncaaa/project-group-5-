@@ -7,7 +7,7 @@ from Crypto.Cipher import AES
 
 # ========== MQTT SETTINGS ==========
 BROKER = "broker.hivemq.com"
-PORT = 8883                             # Standard port
+PORT = 8883                             # TLS port
 BASE_TOPIC = "smarthome/security/sensors/#"
 CLIENT_ID = "security-subscriber-storage"
 
@@ -90,7 +90,7 @@ def save_to_db(sensor: str, value: int):
 # ========== MQTT CALLBACKS ==========
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
-        print("Connected to MQTT broker")
+        print("Connected to MQTT broker (TLS)")
         client.subscribe(BASE_TOPIC)
         print(f"Subscribed to {BASE_TOPIC}")
     else:
@@ -131,7 +131,7 @@ def main():
     client.on_connect = on_connect
     client.on_message = on_message
 
-    print("Connecting to MQTT broker (port 1883)...")
+    print("Connecting to MQTT broker (TLS port 8883)...")
     client.connect(BROKER, PORT)
 
     client.loop_forever()
