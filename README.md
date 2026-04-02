@@ -1,4 +1,4 @@
-# Secure Android Home Security Client
+# Home Security System Android application
 
 ## Project Context
 This Android application serves as a dedicated mobile monitoring client for an integrated IoT home security system. It interfaces with a hardware layer consisting of an Arduino Uno and various environmental sensors (Flame, Gas, Water, and Light) via the MQTT protocol. While the broader system includes database logging and desktop dashboards, this application is a standalone personal development focused on providing secure, mobile-first security management.
