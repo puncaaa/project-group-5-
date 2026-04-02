@@ -198,7 +198,7 @@ def get_chart_data(sensor: str, range_value) -> dict:
 
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
-        print("Chart service connected to MQTT broker")
+        print("Chart service connected to MQTT broker (TLS + AES-256-GCM)")
         client.subscribe(REQUEST_TOPIC)
         print(f"Listening for requests on: {REQUEST_TOPIC}\n")
     else:
@@ -226,8 +226,8 @@ def on_message(client, userdata, msg):
         # Encrypt the response
         encrypted_payload = encrypt_json(result)
 
-        client.publish(RESPONSE_TOPIC, json.dumps(result))
-        print(f"Sent response ({len(result.get('points', []))} points) to {RESPONSE_TOPIC}\n")
+        client.publish(RESPONSE_TOPIC, encrypted_payload)
+        print(f"Sent encrypted response ({len(result.get('points', []))} points) to {RESPONSE_TOPIC}\n")
 
     except (json.JSONDecodeError, ValueError) as e:
         # Return encrypted error response
