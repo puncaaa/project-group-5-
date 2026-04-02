@@ -284,8 +284,8 @@ class Dashboard(tk.Tk):
             color = "green" if value <= 150 else "orange" if value <= 500 else "red"
             status = "Good" if value <= 150 else "Warning" if value <= 500 else "DANGER"
         elif sensor == "water":
-            color = "green" if value == 500 else "red"
-            status = "Dry" if value == 500 else "WET"
+            color = "green" if value <= 150 else "orange" if value <= 500 else "red"
+            status = "Dry" if value <= 150 else "Warning" if value <= 500 else "WET"
         else:  # light
             color = "green" if value >= 512 else "orange"
             status = "Bright" if value >= 512 else "Dark"
