@@ -12,7 +12,7 @@ BASE_TOPIC = "smarthome/security/sensors/#"
 CLIENT_ID = "security-subscriber-storage"
 
 # ========== ENCRYPTION SETTINGS ==========
-# ⚠️ IMPORTANT: Must be IDENTICAL to the key in MQTT_Sender_Home.py
+# IMPORTANT: Must be IDENTICAL to the key in MQTT_Sender_Home.py
 AES_KEY = bytes.fromhex("dd75fc2d686e27a660a25fb5dfa94910e0e9bb4a40f3fe8e89178f93b5de2222")
 
 # ========== DATABASE ==========
