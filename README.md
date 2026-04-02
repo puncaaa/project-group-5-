@@ -1,1 +1,59 @@
-# project-group-5-
+# Secure Android Home Security Client
+
+## Project Context
+This Android application serves as a dedicated mobile monitoring client for an integrated IoT home security system. It interfaces with a hardware layer consisting of an Arduino Uno and various environmental sensors (Flame, Gas, Water, and Light) via the MQTT protocol. While the broader system includes database logging and desktop dashboards, this application is a standalone personal development focused on providing secure, mobile-first security management.
+
+---
+
+## Core Functionality
+
+### 1. Real-Time Security Monitoring
+The application provides a live feed of environmental conditions by subscribing to encrypted MQTT topics. It interprets raw sensor data to provide human-readable status updates:
+* **Fire Detection**: Monitors infrared levels to detect open flames or extreme heat.
+* **Gas Leakage**: Tracks combustible gas concentrations to prevent poisoning or explosions.
+* **Flood Monitoring**: Detects water presence to mitigate potential plumbing or environmental flooding.
+* **Light Levels**: Monitors ambient lighting for environmental awareness.
+
+### 2. High-Priority Emergency Alerts
+The app features a background notification system that triggers immediate audio and visual alerts if sensors cross critical safety thresholds. These notifications are categorized as "Emergency Alerts" and utilize high-importance channels to ensure they are seen even when the app is not in the foreground.
+
+### 3. Historical Data Analysis
+A dedicated Analysis tab allows users to request aggregated historical data from the system backend. Users can toggle between 24-hour, 30-day, and 12-month views to visualize trends and identify recurring security or environmental patterns.
+
+---
+
+## Technical Architecture
+
+### Security and Encryption
+To ensure data privacy and prevent unauthorized access, the application implements a multi-layered security protocol:
+* **Transport Layer Security (TLS)**: All communication with the HiveMQ broker is encrypted using TLS v1.2/1.3.
+* **Payload Encryption**: Sensor data is decrypted locally using the **AES-256-GCM** algorithm. 
+* **Data Integrity**: Each payload is verified using a 16-byte nonce and a GCM authentication tag to prevent replay attacks and data tampering.
+
+### Mobile Tech Stack
+* **Language**: Java 11.
+* **Minimum SDK**: API 26 (Android 8.0).
+* **Target SDK**: API 36.
+* **MQTT Client**: HiveMQ MQTT Client (v3 Async).
+* **Cryptography**: Bouncy Castle Provider for robust AES-GCM support.
+* **Visualization**: MPAndroidChart for rendering interactive sensor graphs.
+
+---
+
+## Installation and Configuration
+
+### Prerequisites
+* Android Studio (Jellyfish or later recommended).
+* A mobile device or emulator running Android 8.0 or higher.
+
+### Setup
+1. Clone the repository and navigate to the `android_app` branch.
+2. Open the project in Android Studio.
+3. Locate the `AES_KEY_HEX` variable in `MainActivity.java` and ensure it matches your system's master encryption key.
+4. Build the project and deploy the APK to your device.
+5. Ensure the device has active internet access to connect to the `broker.hivemq.com` server on port 8883.
+
+---
+
+## Technical Note
+The Android Application described here was developed independently as a personal project extension to a foundational IoT group study. It represents a significant upgrade over the basic system by introducing mobile notifications, advanced cryptographic handling, and native data visualization.
