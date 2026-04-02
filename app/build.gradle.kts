@@ -31,7 +31,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    // Packaging options to exclude duplicate Netty metadata files
     packaging {
         resources {
             excludes.add("META-INF/INDEX.LIST")
@@ -54,6 +53,12 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    // Modern HiveMQ MQTT Client
+    // HiveMQ MQTT Client
     implementation("com.hivemq:hivemq-mqtt-client:1.3.3")
+
+    // Bouncy Castle for AES-GCM encryption
+    implementation("org.bouncycastle:bcprov-jdk18on:1.78")
+
+    // MPAndroidChart for graphs
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }
