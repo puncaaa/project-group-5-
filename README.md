@@ -3,12 +3,10 @@
 ## Project Overview
 This project presents the design and implementation of an IoT-based home security monitoring system. The system detects potential hazards in a residential environment and transmits real-life sensor data using the MQTT communication protocol.
 
-The solution integrates Arduino-based hardware, MQTT messaging, a Python backend, and an SQLite database to create a functional monitoring prototype.
+The final solution uses Arduino-based hardware, MQTT messaging, a Python backend, and an SQLite database to create a functional prototype.
 
 ## Project Methodology
-The project was developed using the Agile methodology. Agile was selected due to its flexibility, adaptability, and support for continuous improvement. It allows modifications during development, coding, and testing stages, and effective system maintainability.
-
-The iterative approach enabled gradual integration of hardware components, MQTT communication, and backend data processing. Continuous refinement ensured improved reliability and efficient system performance.
+The project was developed using the Agile methodology. Agile was selected due to its flexibility, adaptability, and continuous improvement. It allows integrating changes during development, coding, and testing stages, and effective system maintainability. The iterative approach allows gradual integration of hardware components, MQTT communication, and backend data processing. 
 
 ## Project Components
 
@@ -36,9 +34,7 @@ The iterative approach enabled gradual integration of hardware components, MQTT 
 The system outputs sensor values in JSON format every 2 seconds via Serial.
 
 ## 1. Data Encryption
-Sensor data transmitted via MQTT is secured using AES-256-GCM encryption to ensure privacy and prevent unauthorised access. The encryption module processes JSON payloads before publishing to the MQTT broker, maintaining data integrity and confidentiality in real-time communications. Each message uses a freshly generated random 16-byte nonce, with the wire format structured as:
-
-Base64(nonce[16] + ciphertext[N] + tag[16])
+Sensor data transmitted via MQTT is secured using AES-256-GCM encryption to ensure privacy and prevent unauthorised access. The encryption module processes JSON payloads before publishing to the MQTT broker. It allows data integrity and confidentiality in real-time communications. Each message uses a newly generated random 16-byte nonce: Base64(nonce[16] + ciphertext[N] + tag[16])
 
 ## 2. Data Visualisation with Python
 A Python-based visualisation module was developed to provide real-time graphical representation of sensor readings. The module subscribes to MQTT topics, retrieves sensor data from the SQLite database. Them, it serves aggregated chart data over MQTT upon request. This allows end-users to monitor environmental conditions, detect anomalies, and respond to potential hazards almost immediately.
@@ -92,8 +88,6 @@ Chart Service->>SQLite DB: Fetch data
 Chart Service->>MQTT Broker: Send processed data
 MQTT Broker->>Dashboard: Deliver chart data
 ```
-
-The project demonstrates how IoT technologies, lightweight messaging protocols, encryption, and database systems can be integrated to build a functional home security monitoring prototype.
 
 ## Authors
 Developed as a group academic project. Individual contributions are documented in the final project report.
