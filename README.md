@@ -1,12 +1,12 @@
 # IoT-Based Home Security Monitoring System
 
 ## Project Overview
-This project presents the design and implementation of an IoT-based home security monitoring system. The system detects potential hazards in a residential environment and transmits sensor data in real time using the MQTT communication protocol.
+This project presents the design and implementation of an IoT-based home security monitoring system. The system detects potential hazards in a residential environment and transmits real-life sensor data using the MQTT communication protocol.
 
 The solution integrates Arduino-based hardware, MQTT messaging, a Python backend, and an SQLite database to create a functional monitoring prototype.
 
 ## Project Methodology
-The project was developed using the Agile methodology. Agile was selected due to its flexibility, adaptability, and support for continuous improvement. It allows modifications during development, coding, and testing stages while maintaining system stability.
+The project was developed using the Agile methodology. Agile was selected due to its flexibility, adaptability, and support for continuous improvement. It allows modifications during development, coding, and testing stages, and effective system maintainability.
 
 The iterative approach enabled gradual integration of hardware components, MQTT communication, and backend data processing. Continuous refinement ensured improved reliability and efficient system performance.
 
@@ -18,12 +18,7 @@ The iterative approach enabled gradual integration of hardware components, MQTT 
 - KY-026 Flame Sensor Module  
 - LDR Light Sensor Module (LM393-based)  
 - MQ-6 Gas Sensor  
-- Scaled physical room prototype for testing  
-
-### Software
-- Python MQTT subscriber (subscriber.py)  
-- MQTT-to-database integration script (MQTT to SQLite.py)  
-- SQLite database (smarthome_security.db)  
+- Scaled physical room prototype for testing   
 
 ## MQTT Configuration
 - Broker: broker.hivemq.com  
@@ -46,18 +41,17 @@ Sensor data transmitted via MQTT is secured using AES-256-GCM encryption to ensu
 Base64(nonce[16] + ciphertext[N] + tag[16])
 
 ## 2. Data Visualisation with Python
-A Python-based visualisation module was developed to provide real-time graphical representation of sensor readings. The module subscribes to MQTT topics, retrieves sensor data from the SQLite database, and serves aggregated chart data over MQTT upon request. This allows users to monitor environmental conditions, detect anomalies, and respond to potential hazards efficiently.
+A Python-based visualisation module was developed to provide real-time graphical representation of sensor readings. The module subscribes to MQTT topics, retrieves sensor data from the SQLite database. Them, it serves aggregated chart data over MQTT upon request. This allows end-users to monitor environmental conditions, detect anomalies, and respond to potential hazards almost immediately.
 
 ## 3. Tkinter Dashboard
-A Python-based desktop dashboard was implemented using Tkinter to interface with the IoT monitoring system. The dashboard provides the following:
+A Python-based desktop dashboard was implemented using Tkinter to interface with the IoT monitoring system. The dashboard provides the following functionalities:
 
 - Real-time display of sensor readings received via MQTT  
 - Visual status indicators for each sensor (Good, Problem, Emergency)  
-- Alerts for abnormal sensor values (e.g., fire, gas leak, water overflow)  
-- Historical data analysis through an interactive chart view  
-- Manual MQTT connection control via Connect and Disconnect buttons  
+- Alerts for abnormal sensor values (fire, gas leak, water overflow)  
+- Manual MQTT connection control (Connect and Disconnect buttons) 
 
-The dashboard communicates with the Python backend via MQTT, ensuring seamless integration between hardware, backend, and the graphical interface. It is launched via run_dashboard.py and relies on the chart service being active for the analysis tab to function.
+The dashboard communicates with the Python backend via MQTT, ensuring seamless integration between hardware, backend, and the graphical interface.
 
 ## Application Interface and Visualisation
 
@@ -74,7 +68,7 @@ Below the connection controls, the dashboard displays sensor indicators that sho
 
 - Good – the environment is safe and sensor values are within the normal range  
 - Problem – the sensor detects unusual values that may indicate a potential issue  
-- Emergency – the sensor value exceeds the safety threshold and may indicate a dangerous situation  
+- Emergency – the sensor value exceeds the safety ranges and may alert about a dangerous situation  
 
 ### Data Visualisation
 The dashboard includes an Analysis tab that requests chart data from the chart service over MQTT. The chart service performs the following steps:
@@ -83,8 +77,6 @@ The dashboard includes an Analysis tab that requests chart data from the chart s
 2. Processes and packages the collected data  
 3. Encrypts and publishes the chart data as JSON over MQTT  
 4. The dashboard receives the response and renders the visualised sensor readings  
-
-A configurable timeout (CHART_TIMEOUT_SEC, default 15 seconds) is applied when awaiting chart data. The user may retry if the request times out.
 
 ## System Summary
 Environmental data is collected by sensors connected to the Arduino Uno. The data is published via MQTT and received by a Python-based subscriber. Sensor readings are processed and stored in an SQLite database with timestamps. The Tkinter dashboard provides a live view of sensor statuses and historical chart analysis, communicating with dedicated backend services through encrypted MQTT messages.
